@@ -69,6 +69,19 @@ Files are numbered because Omarchy sorts them lexically.
 Extra backgrounds of your own go in `~/.config/omarchy/backgrounds/nothing/` —
 they join the rotation without touching the theme.
 
+## Unlock screen
+
+`unlock.png` is a transparent dot-matrix wordmark, with the red dot as the
+period. It styles the Plymouth boot splash and the unlock screen, and puts the
+theme under _Style > Unlock_ in the Omarchy menu:
+
+```bash
+omarchy plymouth set by theme nothing
+```
+
+`preview-unlock.png` is the accompanying preview, generated with
+`omarchy plymouth preview`.
+
 ## Notes
 
 - Pairs well with a dot-matrix display font (Nothing ships NType82 / Ndot).
