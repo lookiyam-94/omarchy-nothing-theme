@@ -82,6 +82,21 @@ Files are numbered because Omarchy sorts them lexically.
 Extra backgrounds of your own go in `~/.config/omarchy/backgrounds/nothing/` —
 they join the rotation without touching the theme.
 
+### Regenerating them
+
+They are drawn by `tools/generate-backgrounds.py` (needs `pillow`), so the set
+is reproducible rather than a folder of binaries nobody can edit:
+
+```bash
+python3 tools/generate-backgrounds.py                  # all twelve
+python3 tools/generate-backgrounds.py --only glyph     # just one
+python3 tools/generate-backgrounds.py --ground 141414  # on the UI ground
+python3 tools/generate-backgrounds.py --size 3840x2160 # 16:9 panel
+```
+
+Each plate is a small function — copy one, change the geometry, add it to
+`PLATES` to get a thirteenth.
+
 ## Unlock screen
 
 `unlock.png` is a transparent dot-matrix wordmark, with the red dot as the
