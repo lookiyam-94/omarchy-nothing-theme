@@ -58,8 +58,8 @@ Red is the exception in the other direction: kept darker and more chromatic
 
 ## Backgrounds
 
-Twelve, generated rather than photographed, in Nothing's own geometric idiom.
-All 3840x2400, flat vector-style art — the whole set is about 1 MB.
+Eighteen, generated rather than photographed, in Nothing's own geometric idiom.
+All 3840x2400, flat vector-style art — the whole set is about 1.6 MB.
 
 | File | |
 |---|---|
@@ -76,6 +76,18 @@ All 3840x2400, flat vector-style art — the whole set is about 1 MB.
 | `11-diagonal.png` | Dot rulings on the bias, one red |
 | `12-horizon.png` | Halftone density falling to a hard red rule |
 
+Six more, drawn on the softened `#141414` ground so they sit flush with the
+palette the theme ships today:
+
+| File | |
+|---|---|
+| `13-grid-fade.png` | Dot grid thinning from the top down |
+| `14-aperture.png` | Lens iris — seven blade circles around the opening |
+| `15-orbit.png` | One ring, one red body, the dotted path it travels |
+| `16-strata.png` | Layered bands, each at its own density |
+| `17-reticle.png` | Measurement reticle, rules and ticks |
+| `18-weave.png` | Two dot rulings crossed on the bias |
+
 Cycle with `omarchy theme bg next`, or pick one from `omarchy theme bg-switcher`.
 Files are numbered because Omarchy sorts them lexically.
 
@@ -88,7 +100,7 @@ They are drawn by `tools/generate-backgrounds.py` (needs `pillow`), so the set
 is reproducible rather than a folder of binaries nobody can edit:
 
 ```bash
-python3 tools/generate-backgrounds.py                  # all twelve
+python3 tools/generate-backgrounds.py                  # all eighteen
 python3 tools/generate-backgrounds.py --only glyph     # just one
 python3 tools/generate-backgrounds.py --ground 141414  # on the UI ground
 python3 tools/generate-backgrounds.py --size 3840x2160 # 16:9 panel

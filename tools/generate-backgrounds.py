@@ -286,25 +286,164 @@ def horizon(c):
     return img
 
 
+# --- 13 ---------------------------------------------------------------
+def grid_fade(c):
+    """Dot grid thinning from the top down — a vertical falloff, not radial."""
+    img, d = c.new()
+    step = 42
+    for y in range(step, c.h, step):
+        t = (1.0 - y / c.h) ** 1.4
+        r = 1.0 + t * 6.5
+        a = int(20 + t * 190)
+        if r <= 0.7:
+            continue
+        for x in range(step, c.w, step):
+            d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 255, a))
+    d.ellipse([c.w * 0.5 - 12, c.h * 0.18 - 12, c.w * 0.5 + 12, c.h * 0.18 + 12], fill=RED)
+    return img
+
+
+# --- 14 ---------------------------------------------------------------
+def aperture(c):
+    """Camera iris — seven blade circles offset from centre, leaving the opening.
+
+    Each blade is a circle of radius Rb whose centre sits d from the axis, with
+    Rb < d so none reaches the middle; the hole they leave is the aperture.
+    Seven blades rather than six: an odd count cannot land on the symmetric
+    six-point star that evenly spaced chords produce.
+    """
+    img, d = c.new()
+    cx, cy = c.w / 2, c.h / 2
+    blades, dist, Rb = 7, 760, 640
+    for i in range(blades):
+        a = 2 * math.pi * i / blades
+        bx, by = cx + dist * math.cos(a), cy + dist * math.sin(a)
+        d.ellipse([bx - Rb, by - Rb, bx + Rb, by + Rb], outline=INK, width=9)
+    d.ellipse([cx - 1040, cy - 1040, cx + 1040, cy + 1040], outline=(44, 44, 44), width=7)
+    d.ellipse([cx - 16, cy - 16, cx + 16, cy + 16], fill=RED)
+    return img
+
+
+# --- 15 ---------------------------------------------------------------
+def orbit(c):
+    """One thin ring, one red body on it, and the dotted path it travels."""
+    img, d = c.new()
+    cx, cy, R = c.w * 0.5, c.h * 0.5, 720
+    d.ellipse([cx - R, cy - R, cx + R, cy + R], outline=INK, width=8)
+    R2 = R * 1.34
+    n = 150
+    for i in range(n):
+        a = 2 * math.pi * i / n
+        x, y = cx + R2 * math.cos(a), cy + R2 * math.sin(a)
+        d.ellipse([x - 4, y - 4, x + 4, y + 4], fill=(255, 255, 255, 60))
+    a = math.radians(-38)
+    bx, by = cx + R * math.cos(a), cy + R * math.sin(a)
+    d.ellipse([bx - 30, by - 30, bx + 30, by + 30], fill=RED)
+    d.ellipse([cx - 9, cy - 9, cx + 9, cy + 9], fill=(255, 255, 255, 120))
+    return img
+
+
+# --- 16 ---------------------------------------------------------------
+def strata(c):
+    """Horizontal bands, each a ruling of dots at its own density."""
+    img, d = c.new()
+    densities = [0.18, 0.45, 0.26, 0.8, 0.36, 1.0, 0.55, 0.22, 0.68, 0.3]
+    band = c.h / len(densities)
+    for bi, dens in enumerate(densities):
+        # Each band is a stack of three rulings so it reads as a layer, not a line.
+        for sub in (-1, 0, 1):
+            y = band * (bi + 0.5) + sub * 26
+            step = int(20 + (1.0 - dens) * 74)
+            r = 2.4 + dens * 5.4
+            a = int(45 + dens * 200) - abs(sub) * 55
+            for x in range(step, c.w, step):
+                d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 255, max(12, a)))
+    y = band * 5.5
+    d.rounded_rectangle([c.w * 0.5 - 150, y - 8, c.w * 0.5 + 150, y + 8], radius=8, fill=RED)
+    return img
+
+
+# --- 17 ---------------------------------------------------------------
+def reticle(c):
+    """A measurement reticle — rules, ticks, one red centre."""
+    img, d = c.new()
+    cx, cy = c.w / 2, c.h / 2
+    grey = (58, 58, 58)
+    d.line([0, cy, c.w, cy], fill=grey, width=5)
+    d.line([cx, 0, cx, c.h], fill=grey, width=5)
+    for i in range(-18, 19):
+        if i == 0:
+            continue
+        major = i % 5 == 0
+        L = 46 if major else 22
+        w = 6 if major else 4
+        x = cx + i * 96
+        if 0 < x < c.w:
+            d.line([x, cy - L, x, cy + L], fill=INK if major else grey, width=w)
+        y = cy + i * 96
+        if 0 < y < c.h:
+            d.line([cx - L, y, cx + L, y], fill=INK if major else grey, width=w)
+    for rad in (240, 470, 700):
+        d.ellipse([cx - rad, cy - rad, cx + rad, cy + rad], outline=grey, width=4)
+    d.ellipse([cx - 18, cy - 18, cx + 18, cy + 18], fill=RED)
+    return img
+
+
+# --- 18 ---------------------------------------------------------------
+def weave(c):
+    """Two dot rulings crossed on the bias — a lattice, not a stripe."""
+    img, d = c.new()
+    spacing = 88
+    L = int(math.hypot(c.w, c.h)) + 400
+    for sign in (1, -1):
+        ang = math.radians(38 * sign)
+        dx, dy = math.cos(ang), math.sin(ang)
+        nx, ny = -dy, dx
+        n = int(L / spacing) + 2
+        for li in range(-n, n + 1):
+            bx = c.w / 2 + nx * li * spacing
+            by = c.h / 2 + ny * li * spacing
+            for t in range(-L // 2, L // 2, 40):
+                x, y = bx + dx * t, by + dy * t
+                if -40 < x < c.w + 40 and -40 < y < c.h + 40:
+                    d.ellipse([x - 4.4, y - 4.4, x + 4.4, y + 4.4], fill=(255, 255, 255, 62))
+    d.ellipse([c.w * 0.5 - 14, c.h * 0.5 - 14, c.w * 0.5 + 14, c.h * 0.5 + 14], fill=RED)
+    return img
+
+
+# (name, function, ground override).  The first twelve were drawn against the
+# original #0a0a0a and stay there; the later set is built on the softened UI
+# ground so it sits flush with the palette the theme ships today.
 PLATES = [
-    ("01-dot-matrix", dot_matrix),
-    ("02-glyph", glyph),
-    ("03-dot-gradient", dot_gradient),
-    ("04-red-dot", red_dot),
-    ("05-rings", rings),
-    ("06-coil", coil),
-    ("07-sphere", sphere),
-    ("08-dot-type", dot_type),
-    ("09-sequence", sequence),
-    ("10-exposed", exposed),
-    ("11-diagonal", diagonal),
-    ("12-horizon", horizon),
+    ("01-dot-matrix", dot_matrix, None),
+    ("02-glyph", glyph, None),
+    ("03-dot-gradient", dot_gradient, None),
+    ("04-red-dot", red_dot, None),
+    ("05-rings", rings, None),
+    ("06-coil", coil, None),
+    ("07-sphere", sphere, None),
+    ("08-dot-type", dot_type, None),
+    ("09-sequence", sequence, None),
+    ("10-exposed", exposed, None),
+    ("11-diagonal", diagonal, None),
+    ("12-horizon", horizon, None),
+    ("13-grid-fade", grid_fade, "141414"),
+    ("14-aperture", aperture, "141414"),
+    ("15-orbit", orbit, "141414"),
+    ("16-strata", strata, "141414"),
+    ("17-reticle", reticle, "141414"),
+    ("18-weave", weave, "141414"),
 ]
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--ground", default="0a0a0a", help="background hex (default 0a0a0a)")
+    p.add_argument(
+        "--ground",
+        default=None,
+        help="background hex; overrides each plate's own default (0a0a0a for 01-12, "
+        "141414 for 13-18)",
+    )
     p.add_argument("--size", default="3840x2400", help="WxH (default 3840x2400)")
     p.add_argument("--out", default=None, help="output dir (default ../backgrounds)")
     p.add_argument("--only", nargs="*", help="generate only these (substring match)")
@@ -313,11 +452,10 @@ def main():
     w, h = (int(v) for v in args.size.lower().split("x"))
     out = args.out or os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "backgrounds")
     os.makedirs(out, exist_ok=True)
-    canvas = Canvas(w, h, hex_rgb(args.ground))
-
-    for name, fn in PLATES:
+    for name, fn, own_ground in PLATES:
         if args.only and not any(k in name for k in args.only):
             continue
+        canvas = Canvas(w, h, hex_rgb(args.ground or own_ground or "0a0a0a"))
         img = fn(canvas)
         path = os.path.join(out, name + ".png")
         img.save(path, optimize=True)
