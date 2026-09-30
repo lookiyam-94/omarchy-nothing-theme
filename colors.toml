@@ -1,44 +1,47 @@
-# Nothing — glyph light on transparent black
-# Monochrome ground, one red signal. Hues survive only far enough
-# to keep syntax legible; at a glance the screen reads grey.
+# Nothing — glyph light on a softened black
+# Monochrome chrome, one red signal. The desktop stays grey; code gets
+# enough hue to stay readable, because code needs it and a bar does not.
 
 mode                     = "dark"
 
 # Signal, selection and the de-emphasised ramp
 accent                   = "#d71921"
-selection                = "#2a2a2a"
-muted                    = "#6e6e6e"
+selection                = "#333333"
+muted                    = "#8a8a8a"
 
 # Ground, from the deepest surface up to the elevated one
-background               = "#0a0a0a"
-dark_background          = "#050505"
-darker_background        = "#000000"
-lighter_background       = "#161616"
+background               = "#141414"
+dark_background          = "#0f0f0f"
+darker_background        = "#0a0a0a"
+lighter_background       = "#1e1e1e"
 
 # Text, from de-emphasised up to the cursor
-foreground               = "#ededed"
-dark_foreground          = "#5c5c5c"
+foreground               = "#d0d0d0"
+dark_foreground          = "#6e6e6e"
 light_foreground         = "#b4b4b4"
-bright_foreground        = "#ffffff"
+bright_foreground        = "#f0f0f0"
 
 # Window borders. Also drives the shell's border tokens.
 hyprland_active_border   = "rgba(d71921ee) rgba(ff3b42ee) 45deg"
-hyprland_inactive_border = "rgba(2a2a2aaa)"
+hyprland_inactive_border = "rgba(333333aa)"
 
-# Named colours — saturation pulled down hard, red left intact
-red                      = "#d71921"
-yellow                   = "#a89f84"
-orange                   = "#b8846a"
-green                    = "#7a8a72"
-cyan                     = "#7e9694"
-blue                     = "#7e8896"
-magenta                  = "#97869a"
-brown                    = "#6b5f52"
+# Named colours. Evenly spaced in LCh at L=70 C=30 so no two syntax
+# tokens collapse into each other; red is kept darker and more chromatic
+# so an error still looks like an error rather than a pink.
+red                      = "#e06463"
+yellow                   = "#bcaa75"
+orange                   = "#d89f7f"
+green                    = "#8cb687"
+cyan                     = "#58bab9"
+blue                     = "#7db0e0"
+magenta                  = "#c79dcd"
+brown                    = "#a57e62"
 
-# Bright variants
-bright_red               = "#ff3b42"
-bright_yellow            = "#c8bea0"
-bright_green             = "#98a88f"
-bright_cyan              = "#9bb3b1"
-bright_blue              = "#9ba5b3"
-bright_magenta           = "#b3a2b6"
+# Bright variants — same hues, lifted to L=80
+bright_red               = "#ff8884"
+bright_yellow            = "#d7c48d"
+bright_orange            = "#f4b998"
+bright_green             = "#a5d09f"
+bright_cyan              = "#74d4d3"
+bright_blue              = "#98cafb"
+bright_magenta           = "#e2b7e8"

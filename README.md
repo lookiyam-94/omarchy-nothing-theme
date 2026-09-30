@@ -17,31 +17,44 @@ omarchy theme set nothing
 
 Nothing's hardware is transparent shell over black, with white glyph LEDs and a
 single red accent used sparingly — a record dot, a power key. The theme follows
-that discipline. The desktop is near-black (`#0a0a0a`) under glyph-white text
-(`#ededed`). Red (`#d71921`) is the only saturated colour on screen, and it is
-spent on one thing: the focused window.
+that discipline where the discipline belongs: the desktop chrome. Bar, borders,
+menus and surfaces stay grey, and red (`#d71921`) is spent on one thing — the
+focused window.
+
+Inside a terminal or an editor it gives way, because code is not a bar. Syntax
+carries as much hue as it needs to stay scannable.
 
 ## Palette
 
 | Role | Hex | Notes |
 |---|---|---|
-| `background` | `#0a0a0a` | Near-black, not pure — keeps panel edges readable |
-| `darker_background` | `#000000` | True black for the deepest surfaces |
-| `foreground` | `#ededed` | Glyph white, 16.9:1 on background |
+| `background` | `#141414` | Softened black — 11.9:1 under the text |
+| `darker_background` | `#0a0a0a` | Deepest surface |
+| `foreground` | `#d0d0d0` | Off-white, not glyph-white |
 | `accent` | `#d71921` | Nothing red |
 | `bright_red` | `#ff3b42` | The active-border gradient's far stop |
-| `selection` | `#2a2a2a` | Neutral grey — selection never tints |
+| `selection` | `#333333` | Neutral grey — selection never tints |
 
 Active window border is a 45° gradient `#d71921 → #ff3b42`. Inactive borders drop
-to `#2a2a2a` so only one window is ever lit.
+to `#333333` so only one window is ever lit.
+
+### On contrast
+
+An earlier version ran `#0a0a0a` under `#ededed` — 16.9:1. It photographed well
+and was tiring to work in; near-white on near-black is the classic recipe for
+halation. The ground now sits at 11.9:1, level with Catppuccin and Kanagawa
+(11.3:1), both of which people use for whole working days.
 
 ### ANSI colours
 
-The sixteen terminal slots are desaturated hard — enough hue to separate strings
-from keywords from numbers, not enough to read as colour at a glance. Red is the
-exception and stays at full strength, so errors and diffs cut through a screen
-that is otherwise grey. All non-red hues clear 5:1 on the background; red clears
-3.8:1, which is a UI/large-text ratio suited to its role as border and indicator.
+The six syntax hues are spaced evenly around LCh at `L=70 C=30`, which gives a
+mean ΔE of 44 between them — comparable to Gruvbox (44) — with the closest pair
+at ΔE 19, so no two token types collapse into each other. Every one clears 8:1 on
+the background. They stay low-chroma, so a screen of prose still reads grey; a
+screen of code does not.
+
+Red is the exception in the other direction: kept darker and more chromatic
+(`#e06463`, 5.4:1) so an error looks like an error rather than a pink.
 
 ## Backgrounds
 
