@@ -411,6 +411,265 @@ def weave(c):
     return img
 
 
+# --- 19 ---------------------------------------------------------------
+def dial(c):
+    """A watch face in dots — sixty minute marks, twelve hour bars, one red second."""
+    img, d = c.new()
+    cx, cy, R = c.w / 2, c.h / 2, 820
+    for i in range(60):
+        a = 2 * math.pi * i / 60 - math.pi / 2
+        if i % 5 == 0:
+            for k in range(4):
+                rr = R - k * 30
+                x, y = cx + rr * math.cos(a), cy + rr * math.sin(a)
+                d.ellipse([x - 9, y - 9, x + 9, y + 9], fill=INK)
+        else:
+            x, y = cx + R * math.cos(a), cy + R * math.sin(a)
+            d.ellipse([x - 5, y - 5, x + 5, y + 5], fill=(255, 255, 255, 90))
+    a = 2 * math.pi * 37 / 60 - math.pi / 2
+    x, y = cx + (R + 70) * math.cos(a), cy + (R + 70) * math.sin(a)
+    d.ellipse([x - 16, y - 16, x + 16, y + 16], fill=RED)
+    d.ellipse([cx - 8, cy - 8, cx + 8, cy + 8], fill=(255, 255, 255, 140))
+    return img
+
+
+# --- 20 ---------------------------------------------------------------
+def waveform(c):
+    """An audio waveform as stacked dot columns, mirrored about the centre line."""
+    img, d = c.new()
+    step, r = 40, 7.0
+    cy, cols = c.h / 2, int(c.w * 0.72 / step)
+    x0 = (c.w - (cols - 1) * step) / 2
+    peak = cols // 2 + 6
+    for i in range(cols):
+        t = i / (cols - 1)
+        env = math.sin(math.pi * t) ** 1.3
+        amp = env * (0.55 + 0.45 * abs(math.sin(t * 23.0) * math.cos(t * 7.3)))
+        n = max(1, int(amp * 14))
+        x = x0 + i * step
+        for k in range(-n, n + 1):
+            y = cy + k * step
+            fade = 1.0 - abs(k) / (n + 1)
+            fill = RED if i == peak else (255, 255, 255, int(50 + fade * 205))
+            d.ellipse([x - r, y - r, x + r, y + r], fill=fill)
+    return img
+
+
+# --- 21 ---------------------------------------------------------------
+def crescent(c):
+    """The halftone orb lit from behind — only a rim of dots survives."""
+    img, d = c.new()
+    cx, cy, R = c.w * 0.5, c.h * 0.5, 820
+    step = 24
+    lx, ly, lz = 0.86, -0.38, -0.34
+    y = cy - R
+    while y <= cy + R:
+        x = cx - R
+        while x <= cx + R:
+            dx, dy = (x - cx) / R, (y - cy) / R
+            s = dx * dx + dy * dy
+            if s <= 1.0:
+                dz = math.sqrt(1.0 - s)
+                b = max(0.0, dx * lx + dy * ly + dz * lz) ** 0.9
+                r = b * (step * 0.5)
+                if r > 0.8:
+                    d.ellipse(
+                        [x - r, y - r, x + r, y + r], fill=(255, 255, 255, int(70 + b * 185))
+                    )
+            x += step
+        y += step
+    return img
+
+
+# --- 22 ---------------------------------------------------------------
+def viewfinder(c):
+    """Four corner brackets framing nothing, and a red record dot."""
+    img, d = c.new()
+    cx, cy = c.w / 2, c.h / 2
+    hw, hh, L, lw = 1180, 700, 170, 8
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            X, Y = cx + sx * hw, cy + sy * hh
+            d.line([(X, Y), (X - sx * L, Y)], fill=INK, width=lw)
+            d.line([(X, Y), (X, Y - sy * L)], fill=INK, width=lw)
+    d.ellipse([cx - hw + 40, cy - hh + 40, cx - hw + 72, cy - hh + 72], fill=RED)
+    g = (60, 60, 60)
+    d.line([cx - 40, cy, cx + 40, cy], fill=g, width=4)
+    d.line([cx, cy - 40, cx, cy + 40], fill=g, width=4)
+    return img
+
+
+# --- 23 ---------------------------------------------------------------
+def scatter(c):
+    """A sparse field of dots at three sizes — night sky in a dot matrix."""
+    import random
+
+    rnd = random.Random(23)
+    img, d = c.new()
+    g = 48
+    for y in range(g, c.h, g):
+        for x in range(g, c.w, g):
+            v = rnd.random()
+            if v < 0.82:
+                continue
+            r, a = (2.2, 50) if v < 0.95 else (4.0, 130) if v < 0.99 else (7.0, 235)
+            d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 255, a))
+    x, y = g * (c.w // g // 2 - 11), g * (c.h // g // 2 + 6)
+    d.ellipse([x - 10, y - 10, x + 10, y + 10], fill=RED)
+    return img
+
+
+# --- 24 ---------------------------------------------------------------
+def phyllotaxis(c):
+    """Golden-angle dot spiral, growing outward and fading at the edge."""
+    img, d = c.new()
+    cx, cy = c.w / 2, c.h / 2
+    golden = math.pi * (3 - math.sqrt(5))
+    n, k = 1400, 26.0
+    for i in range(1, n):
+        rad = k * math.sqrt(i)
+        a = i * golden
+        x, y = cx + rad * math.cos(a), cy + rad * math.sin(a)
+        t = i / n
+        r = 2.0 + 9.0 * math.sin(math.pi * min(1.0, t * 1.15)) ** 0.8
+        alpha = int(255 * (1.0 - t) ** 0.7 + 30)
+        d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 255, min(255, alpha)))
+    d.ellipse([cx - 14, cy - 14, cx + 14, cy + 14], fill=RED)
+    return img
+
+
+# --- 25 ---------------------------------------------------------------
+def ripple(c):
+    """A drop off-centre — dot size rides the wave and dies away with distance."""
+    img, d = c.new()
+    step = 34
+    cx, cy = c.w * 0.38, c.h * 0.56
+    for y in range(step, c.h, step):
+        for x in range(step, c.w, step):
+            dist = math.hypot(x - cx, y - cy)
+            wave = 0.5 + 0.5 * math.cos(dist / 70.0)
+            fall = math.exp(-dist / 1500.0)
+            t = wave * fall
+            r = 0.9 + t * 8.5
+            if r > 1.0:
+                d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 255, int(20 + t * 215)))
+    d.ellipse([cx - 15, cy - 15, cx + 15, cy + 15], fill=RED)
+    return img
+
+
+# --- 26 ---------------------------------------------------------------
+def case(c):
+    """Ear (1) case from above — a clear pill, two buds seated, one red stem."""
+    img, d = c.new()
+    cx, cy, hw, hh = c.w / 2, c.h / 2, 820, 560
+    d.rounded_rectangle([cx - hw, cy - hh, cx + hw, cy + hh], radius=hh, outline=INK, width=9)
+    d.rounded_rectangle(
+        [cx - hw + 60, cy - hh + 60, cx + hw - 60, cy + hh - 60],
+        radius=hh - 60,
+        outline=(56, 56, 56),
+        width=5,
+    )
+    for sx, colour in ((-1, INK), (1, RED)):
+        bx = cx + sx * 330
+        d.ellipse([bx - 200, cy - 200, bx + 200, cy + 200], outline=INK, width=9)
+        d.ellipse([bx - 70, cy - 70, bx + 70, cy + 70], outline=(80, 80, 80), width=6)
+        d.rounded_rectangle([bx - 26, cy + 120, bx + 26, cy + 360], radius=26, fill=colour)
+    return img
+
+
+# --- 27 ---------------------------------------------------------------
+def level(c):
+    """An LED level meter — rows of segments, the last lit one struck red."""
+    img, d = c.new()
+    rows, segs, sw, sh, gx, gy = 7, 24, 86, 34, 22, 40
+    lit = [9, 15, 21, 12, 18, 6, 14]
+    total_w = segs * sw + (segs - 1) * gx
+    total_h = rows * sh + (rows - 1) * gy
+    x0, y0 = (c.w - total_w) / 2, (c.h - total_h) / 2
+    for r in range(rows):
+        y = y0 + r * (sh + gy)
+        for s in range(segs):
+            x = x0 + s * (sw + gx)
+            if s < lit[r] - 1:
+                fill = INK
+            elif s == lit[r] - 1:
+                fill = RED if r == 2 else INK
+            else:
+                fill = (40, 40, 40)
+            d.rounded_rectangle([x, y, x + sw, y + sh], radius=sh / 2, fill=fill)
+    return img
+
+
+# --- 28 ---------------------------------------------------------------
+def prompt(c):
+    """A shell prompt in the 5x7 matrix — chevron, and a red cursor block."""
+    img, d = c.new()
+    g = 48
+    for y in range(g, c.h, g):
+        for x in range(g, c.w, g):
+            d.ellipse([x - 2.6, y - 2.6, x + 2.6, y + 2.6], fill=(255, 255, 255, 22))
+    chevron = ["#....", ".#...", "..#..", "...#.", "..#..", ".#...", "#...."]
+    cell, r = g * 2, 28.0
+    ox = round((c.w / 2 - 5.5 * cell) / g) * g
+    oy = round((c.h / 2 - 3 * cell) / g) * g
+    for ry, row in enumerate(chevron):
+        for rx, ch in enumerate(row):
+            if ch == "#":
+                X, Y = ox + rx * cell, oy + ry * cell
+                d.ellipse([X - r, Y - r, X + r, Y + r], fill=INK)
+    cx0 = ox + 8 * cell
+    for ry in range(7):
+        for rx in range(4):
+            X, Y = cx0 + rx * cell, oy + ry * cell
+            d.ellipse([X - r, Y - r, X + r, Y + r], fill=RED)
+    return img
+
+
+# --- 29 ---------------------------------------------------------------
+def contour(c):
+    """Topographic contours, traced in dots across a few soft hills."""
+    img, d = c.new()
+    hills = [(0.30, 0.38, 520, 1.0), (0.66, 0.60, 640, 0.9), (0.78, 0.24, 360, 0.6),
+             (0.18, 0.78, 420, 0.5)]
+    step, bands = 14, 13
+
+    def field(x, y):
+        return sum(
+            a * math.exp(-((x - c.w * hx) ** 2 + (y - c.h * hy) ** 2) / (2 * s * s))
+            for hx, hy, s, a in hills
+        )
+
+    for y in range(0, c.h, step):
+        for x in range(0, c.w, step):
+            v = field(x, y) * bands
+            frac = v - math.floor(v)
+            if v > 0.6 and (frac < 0.07 or frac > 0.93) and (x // step + y // step) % 2 == 0:
+                a = int(60 + min(1.0, v / bands) * 190)
+                d.ellipse([x - 3.4, y - 3.4, x + 3.4, y + 3.4], fill=(255, 255, 255, a))
+    X, Y = c.w * 0.30, c.h * 0.38
+    d.ellipse([X - 14, Y - 14, X + 14, Y + 14], fill=RED)
+    return img
+
+
+# --- 30 ---------------------------------------------------------------
+def split(c):
+    """Half the field set in dots, half left empty — a red dot on the seam."""
+    img, d = c.new()
+    step, r = 44, 5.0
+    ang = math.radians(62)
+    nx, ny = math.cos(ang), math.sin(ang)
+    cx, cy = c.w * 0.52, c.h * 0.5
+    for y in range(step, c.h, step):
+        for x in range(step, c.w, step):
+            s = (x - cx) * nx + (y - cy) * ny
+            if s < 0:
+                t = min(1.0, -s / 900.0)
+                a = int(200 - t * 150)
+                d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 255, a))
+    d.ellipse([cx - 20, cy - 20, cx + 20, cy + 20], fill=RED)
+    return img
+
+
 # (name, function, ground override).  The first twelve were drawn against the
 # original #0a0a0a and stay there; the later set is built on the softened UI
 # ground so it sits flush with the palette the theme ships today.
@@ -433,6 +692,20 @@ PLATES = [
     ("16-strata", strata, "141414"),
     ("17-reticle", reticle, "141414"),
     ("18-weave", weave, "141414"),
+    # Full black: true #000000, for OLED panels and the darkest desk.
+    ("19-dial", dial, "000000"),
+    ("20-waveform", waveform, "000000"),
+    ("21-crescent", crescent, "000000"),
+    ("22-viewfinder", viewfinder, "000000"),
+    ("23-scatter", scatter, "000000"),
+    ("24-phyllotaxis", phyllotaxis, "000000"),
+    # Back on the softened UI ground.
+    ("25-ripple", ripple, "141414"),
+    ("26-case", case, "141414"),
+    ("27-level", level, "141414"),
+    ("28-prompt", prompt, "141414"),
+    ("29-contour", contour, "141414"),
+    ("30-split", split, "141414"),
 ]
 
 

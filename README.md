@@ -58,8 +58,8 @@ Red is the exception in the other direction: kept darker and more chromatic
 
 ## Backgrounds
 
-Eighteen, generated rather than photographed, in Nothing's own geometric idiom.
-All 3840x2400, flat vector-style art — the whole set is about 1.6 MB.
+Thirty, generated rather than photographed, in Nothing's own geometric idiom.
+All 3840x2400, flat vector-style art — the whole set is about 2.6 MB.
 
 | File | |
 |---|---|
@@ -88,6 +88,29 @@ palette the theme ships today:
 | `17-reticle.png` | Measurement reticle, rules and ticks |
 | `18-weave.png` | Two dot rulings crossed on the bias |
 
+Six more on full black — true `#000000`, so the ground disappears on an OLED
+panel and only the dots are lit:
+
+| File | |
+|---|---|
+| `19-dial.png` | Watch face in dots, one red second |
+| `20-waveform.png` | Audio waveform as mirrored dot columns |
+| `21-crescent.png` | The halftone orb lit from behind, a rim of dots |
+| `22-viewfinder.png` | Four corner brackets and a red record dot |
+| `23-scatter.png` | Sparse dot field at three sizes |
+| `24-phyllotaxis.png` | Golden-angle dot spiral |
+
+And six more back on the softened `#141414` ground:
+
+| File | |
+|---|---|
+| `25-ripple.png` | A drop off-centre, dot size riding the wave |
+| `26-case.png` | Ear (1) case from above, one red stem |
+| `27-level.png` | LED level meter, one peak struck red |
+| `28-prompt.png` | Shell prompt in the dot matrix, red cursor block |
+| `29-contour.png` | Topographic contours traced in dots |
+| `30-split.png` | Half the field in dots, a red dot on the seam |
+
 Cycle with `omarchy theme bg next`, or pick one from `omarchy theme bg-switcher`.
 Files are numbered because Omarchy sorts them lexically.
 
@@ -100,7 +123,7 @@ They are drawn by `tools/generate-backgrounds.py` (needs `pillow`), so the set
 is reproducible rather than a folder of binaries nobody can edit:
 
 ```bash
-python3 tools/generate-backgrounds.py                  # all eighteen
+python3 tools/generate-backgrounds.py                  # all thirty
 python3 tools/generate-backgrounds.py --only glyph     # just one
 python3 tools/generate-backgrounds.py --ground 141414  # on the UI ground
 python3 tools/generate-backgrounds.py --size 3840x2160 # 16:9 panel
