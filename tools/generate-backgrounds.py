@@ -3,12 +3,12 @@
 
 Every wallpaper in this theme is drawn, not photographed. The vocabulary is
 Nothing's own: dot matrices, halftones, the Phone (1) glyph strips, exposed
-hardware. Flat geometry on a near-black ground, white ink, one red accent —
-which is why twelve 4K images come to about 1 MB and carry no image rights.
+hardware. Flat geometry on a black ground, white ink, one red accent —
+which is why ten 4K images come to about 1.2 MB and carry no image rights.
 
     pip install pillow
     python3 tools/generate-backgrounds.py                 # default ground
-    python3 tools/generate-backgrounds.py --ground 141414 # match the UI
+    python3 tools/generate-backgrounds.py --ground 141414 # a softer ground
     python3 tools/generate-backgrounds.py --only glyph sphere
 
 Sizes are 3840x2400 (16:10). Pass --size WxH for another panel.
@@ -137,12 +137,14 @@ def coil(c):
 def sphere(c):
     """Halftone-shaded orb — dot radius tracks a simple lambert term."""
     img, d = c.new()
-    cx, cy, R = c.w * 0.5, c.h * 0.47, 760
+    cx, cy, R = c.w * 0.5, c.h * 0.5, 760
     step = 26
     lx, ly, lz = -0.45, -0.62, 0.65
-    y = cy - R
+    # Lattice runs outward from the centre, so the dots are symmetric about it.
+    n = int(R // step)
+    y = cy - n * step
     while y <= cy + R:
-        x = cx - R
+        x = cx - n * step
         while x <= cx + R:
             dx, dy = (x - cx) / R, (y - cy) / R
             s = dx * dx + dy * dy
@@ -172,13 +174,9 @@ GLYPHS = {
 
 
 def dot_type(c, word="NOTHING"):
-    """The wordmark set in a 5x7 matrix, snapped to the ground grid."""
+    """The wordmark set in a 5x7 matrix on a bare ground."""
     img, d = c.new()
-    g = 48
-    for y in range(g, c.h, g):
-        for x in range(g, c.w, g):
-            d.ellipse([x - 2.6, y - 2.6, x + 2.6, y + 2.6], fill=(255, 255, 255, 26))
-    cell, r = g, 13.0
+    cell, r = 48, 13.0
     wpx = (sum(len(GLYPHS[ch][0]) for ch in word) + len(word) - 1) * cell
     ox = round(((c.w - wpx) / 2) / cell) * cell
     oy = round((c.h * 0.5 - 3.5 * cell) / cell) * cell
@@ -605,9 +603,6 @@ def prompt(c):
     """A shell prompt in the 5x7 matrix — chevron, and a red cursor block."""
     img, d = c.new()
     g = 48
-    for y in range(g, c.h, g):
-        for x in range(g, c.w, g):
-            d.ellipse([x - 2.6, y - 2.6, x + 2.6, y + 2.6], fill=(255, 255, 255, 22))
     chevron = ["#....", ".#...", "..#..", "...#.", "..#..", ".#...", "#...."]
     cell, r = g * 2, 28.0
     ox = round((c.w / 2 - 5.5 * cell) / g) * g
@@ -670,42 +665,19 @@ def split(c):
     return img
 
 
-# (name, function, ground override).  The first twelve were drawn against the
-# original #0a0a0a and stay there; the later set is built on the softened UI
-# ground so it sits flush with the palette the theme ships today.
+# (name, function, ground override).  Every plate sits on true #000000, so the
+# ground disappears on an OLED panel and only the dots are lit.
 PLATES = [
-    ("01-dot-matrix", dot_matrix, None),
-    ("02-glyph", glyph, None),
-    ("03-dot-gradient", dot_gradient, None),
-    ("04-red-dot", red_dot, None),
-    ("05-rings", rings, None),
-    ("06-coil", coil, None),
-    ("07-sphere", sphere, None),
-    ("08-dot-type", dot_type, None),
-    ("09-sequence", sequence, None),
-    ("10-exposed", exposed, None),
-    ("11-diagonal", diagonal, None),
-    ("12-horizon", horizon, None),
-    ("13-grid-fade", grid_fade, "141414"),
-    ("14-aperture", aperture, "141414"),
-    ("15-orbit", orbit, "141414"),
-    ("16-strata", strata, "141414"),
-    ("17-reticle", reticle, "141414"),
-    ("18-weave", weave, "141414"),
-    # Full black: true #000000, for OLED panels and the darkest desk.
-    ("19-dial", dial, "000000"),
-    ("20-waveform", waveform, "000000"),
-    ("21-crescent", crescent, "000000"),
-    ("22-viewfinder", viewfinder, "000000"),
-    ("23-scatter", scatter, "000000"),
-    ("24-phyllotaxis", phyllotaxis, "000000"),
-    # Back on the softened UI ground.
-    ("25-ripple", ripple, "141414"),
-    ("26-case", case, "141414"),
-    ("27-level", level, "141414"),
-    ("28-prompt", prompt, "141414"),
-    ("29-contour", contour, "141414"),
-    ("30-split", split, "141414"),
+    ("01-glyph", glyph, None),
+    ("02-dot-gradient", dot_gradient, None),
+    ("03-sphere", sphere, None),
+    ("04-dot-type", dot_type, None),
+    ("05-sequence", sequence, None),
+    ("06-horizon", horizon, None),
+    ("07-orbit", orbit, None),
+    ("08-viewfinder", viewfinder, None),
+    ("09-phyllotaxis", phyllotaxis, None),
+    ("10-prompt", prompt, None),
 ]
 
 
@@ -714,8 +686,7 @@ def main():
     p.add_argument(
         "--ground",
         default=None,
-        help="background hex; overrides each plate's own default (0a0a0a for 01-12, "
-        "141414 for 13-18)",
+        help="background hex; overrides each plate's own default (000000)",
     )
     p.add_argument("--size", default="3840x2400", help="WxH (default 3840x2400)")
     p.add_argument("--out", default=None, help="output dir (default ../backgrounds)")
@@ -728,7 +699,7 @@ def main():
     for name, fn, own_ground in PLATES:
         if args.only and not any(k in name for k in args.only):
             continue
-        canvas = Canvas(w, h, hex_rgb(args.ground or own_ground or "0a0a0a"))
+        canvas = Canvas(w, h, hex_rgb(args.ground or own_ground or "000000"))
         img = fn(canvas)
         path = os.path.join(out, name + ".png")
         img.save(path, optimize=True)
