@@ -96,6 +96,34 @@ python3 tools/generate-backgrounds.py --size 3840x2160 # 16:9 panel
 Each plate is a small function — copy one, change the geometry, add it to
 `PLATES` to get an eleventh.
 
+## Vivaldi
+
+Omarchy does not theme Vivaldi, so the theme ships one to import,
+`vivaldi/nothing.zip`, with the `04-dot-type` wordmark behind the Start Page.
+Vivaldi will not open files from inside `~/.config`, so copy it out first:
+
+```bash
+cp ~/.config/omarchy/themes/nothing/vivaldi/nothing.zip ~/Downloads/nothing-vivaldi.zip
+```
+
+Then _Settings > Themes > Import Theme..._ and pick `~/Downloads/nothing-vivaldi.zip`.
+
+It keeps the desktop's discipline. The tab bar sits on `#141414`, the desktop's
+ground, and the toolbars one step up on `#1e1e1e`. Pages are never allowed to
+tint the chrome, and red is the highlight only — focus and selection. No
+transparency, no blur, no contrast boost (it draws light strokes around the
+chrome), a 4px radius.
+
+The archive is built from `colors.toml` by `tools/build-vivaldi.py`, so it
+follows the palette rather than keeping its own copy. A Vivaldi theme carries
+one Start Page image, so another background builds a second theme beside it:
+
+```bash
+python3 tools/build-vivaldi.py                         # vivaldi/nothing.zip
+python3 tools/build-vivaldi.py --background 01-glyph   # Nothing · Glyph
+python3 tools/build-vivaldi.py --background none       # flat ground
+```
+
 ## Unlock screen
 
 `unlock.png` is a transparent dot-matrix wordmark, with the red dot as the
