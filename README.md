@@ -99,7 +99,7 @@ Each plate is a small function — copy one, change the geometry, add it to
 ## Vivaldi
 
 Omarchy does not theme Vivaldi, so the theme ships one to import,
-`vivaldi/nothing.zip`, with the `04-dot-type` wordmark behind the Start Page.
+`vivaldi/nothing.zip`, with the `10-prompt` shell prompt behind the Start Page.
 Vivaldi will not open files from inside `~/.config`, so copy it out first:
 
 ```bash

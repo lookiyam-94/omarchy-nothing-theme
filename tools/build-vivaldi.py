@@ -9,7 +9,7 @@ rather than keeping its own copy. Same discipline as the desktop: grey
 chrome, and red spent on one thing — the highlight.
 
 A Vivaldi theme carries one Start Page image. The shipped theme uses the
-dot-type wordmark; any other background in --background becomes its own
+shell prompt; any other background in --background becomes its own
 theme, named after it.
 
     python3 tools/build-vivaldi.py                         # vivaldi/nothing.zip
@@ -32,7 +32,7 @@ ID_NAMESPACE = uuid.UUID("6e6f7468-696e-4700-8000-d71921000000")
 
 
 # The background the shipped theme is built with, under the plain name.
-DEFAULT_BACKGROUND = "04-dot-type"
+DEFAULT_BACKGROUND = "10-prompt"
 
 
 def build(c, background, out):
