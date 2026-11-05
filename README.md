@@ -83,18 +83,9 @@ they join the rotation without touching the theme.
 
 ### Regenerating them
 
-They are drawn by `tools/generate-backgrounds.py` (needs `pillow`), so the set
-is reproducible rather than a folder of binaries nobody can edit:
-
-```bash
-python3 tools/generate-backgrounds.py                  # all ten
-python3 tools/generate-backgrounds.py --only glyph     # just one
-python3 tools/generate-backgrounds.py --ground 141414  # on the softer UI ground
-python3 tools/generate-backgrounds.py --size 3840x2160 # 16:9 panel
-```
-
-Each plate is a small function — copy one, change the geometry, add it to
-`PLATES` to get an eleventh.
+They are drawn by a script, so the set is reproducible rather than a folder of
+binaries nobody can edit. The generator lives in its own repository,
+[omarchy-nothing-theme-tools](https://github.com/lookiyam-94/omarchy-nothing-theme-tools).
 
 ## Vivaldi
 
@@ -114,15 +105,9 @@ tint the chrome, and red is the highlight only — focus and selection. No
 transparency, no blur, no contrast boost (it draws light strokes around the
 chrome), a 4px radius.
 
-The archive is built from `colors.toml` by `tools/build-vivaldi.py`, so it
-follows the palette rather than keeping its own copy. A Vivaldi theme carries
-one Start Page image, so another background builds a second theme beside it:
-
-```bash
-python3 tools/build-vivaldi.py                         # vivaldi/nothing.zip
-python3 tools/build-vivaldi.py --background 01-glyph   # Nothing · Glyph
-python3 tools/build-vivaldi.py --background none       # flat ground
-```
+The archive is built from `colors.toml`, so it follows the palette rather than
+keeping its own copy. The builder, which can also put another background behind
+the Start Page, is in [omarchy-nothing-theme-tools](https://github.com/lookiyam-94/omarchy-nothing-theme-tools).
 
 ## Unlock screen
 
