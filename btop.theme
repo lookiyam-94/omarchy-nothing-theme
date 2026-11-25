@@ -1,0 +1,92 @@
+# Nothing — btop
+# Greyscale ramps; red is spent only where something is wrong or selected:
+# keyboard hints, the selected process, the hot end of temperature and of
+# per-process load. Values come from colors.toml (this file does not follow it).
+
+# Main background / text
+theme[main_bg]="#141414"
+theme[main_fg]="#d0d0d0"
+
+# Box titles
+theme[title]="#f0f0f0"
+
+# Keyboard shortcut highlight
+theme[hi_fg]="#d71921"
+
+# Selected process row
+theme[selected_bg]="#333333"
+theme[selected_fg]="#ff3b42"
+
+# Inactive / disabled text
+theme[inactive_fg]="#6e6e6e"
+
+# Text on top of graphs (uptime, network scale)
+theme[graph_text]="#b4b4b4"
+
+# Background of the percentage meters
+theme[meter_bg]="#333333"
+
+# Misc process-box text and mini cpu graphs
+theme[proc_misc]="#b4b4b4"
+
+# Box outlines: one grey for all four, so no box competes with another
+theme[cpu_box]="#6e6e6e"
+theme[mem_box]="#6e6e6e"
+theme[net_box]="#6e6e6e"
+theme[proc_box]="#6e6e6e"
+
+# Divider lines
+theme[div_line]="#333333"
+
+# Temperature: grey, light, then the signal
+theme[temp_start]="#8a8a8a"
+theme[temp_mid]="#d0d0d0"
+theme[temp_end]="#d71921"
+
+# CPU graph: brighter as load rises
+theme[cpu_start]="#6e6e6e"
+theme[cpu_mid]="#b4b4b4"
+theme[cpu_end]="#f0f0f0"
+
+# Mem/Disk free
+theme[free_start]="#6e6e6e"
+theme[free_mid]="#b4b4b4"
+theme[free_end]="#f0f0f0"
+
+# Mem/Disk cached
+theme[cached_start]="#4a4a4a"
+theme[cached_mid]="#8a8a8a"
+theme[cached_end]="#b4b4b4"
+
+# Mem/Disk available
+theme[available_start]="#6e6e6e"
+theme[available_mid]="#b4b4b4"
+theme[available_end]="#f0f0f0"
+
+# Mem/Disk used
+theme[used_start]="#8a8a8a"
+theme[used_mid]="#d0d0d0"
+theme[used_end]="#f0f0f0"
+
+# Download / upload: same ramp, upload a step dimmer so they still tell apart
+theme[download_start]="#6e6e6e"
+theme[download_mid]="#b4b4b4"
+theme[download_end]="#f0f0f0"
+theme[upload_start]="#4a4a4a"
+theme[upload_mid]="#8a8a8a"
+theme[upload_end]="#d0d0d0"
+
+# Process box gradient (threads, mem, cpu): the hottest process turns red
+theme[process_start]="#6e6e6e"
+theme[process_mid]="#d0d0d0"
+theme[process_end]="#ff3b42"
+
+# Graph gradient, background to foreground
+theme[gradient_color_0]="#141414"
+theme[gradient_color_1]="#1e1e1e"
+theme[gradient_color_2]="#333333"
+theme[gradient_color_3]="#8a8a8a"
+theme[gradient_color_4]="#6e6e6e"
+theme[gradient_color_5]="#d0d0d0"
+theme[gradient_color_6]="#b4b4b4"
+theme[gradient_color_7]="#f0f0f0"
