@@ -56,6 +56,20 @@ screen of code does not.
 Red is the exception in the other direction: kept darker and more chromatic
 (`#e06463`, 5.4:1) so an error looks like an error rather than a pink.
 
+## Icons
+
+`icons.theme` points at `Nothing-Mono`: Yaru-red-dark and the Yaru themes it
+inherits, with every colour replaced by its luminance grey. It is not shipped
+(about 90 MB, and a theme may not carry scripts), so it has to exist in
+`~/.local/share/icons` for GNOME to use it. Without it GNOME falls back to its
+default icons. App icons that live only in `hicolor` stay coloured either way.
+
+## btop
+
+`btop.theme` is greyscale ramps with red kept for the hot end of temperature,
+the hottest processes, the selected row and keyboard hints. It is written by
+hand, so it does not follow `colors.toml`.
+
 ## Backgrounds
 
 Ten, generated rather than photographed, in Nothing's own geometric idiom.
